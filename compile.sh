@@ -19,7 +19,7 @@ function clean() {
     rm -rf out
 }
 
-export KBUILD_BUILD_HOST=Silont
+export KBUILD_BUILD_HOST=Nian
 export KBUILD_BUILD_USER="AkuFarish"
 
 function build_kernel() {
