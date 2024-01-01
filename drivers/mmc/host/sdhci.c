@@ -2029,9 +2029,8 @@ static void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 	bool turning_on_clk = false;
 	unsigned long flags;
 	u8 ctrl;
-
-	host->reinit_uhs = false;
 	int ret;
+	host->reinit_uhs = false;
 
 	if (host->flags & SDHCI_DEVICE_DEAD) {
 		if (!IS_ERR(mmc->supply.vmmc) &&
