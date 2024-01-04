@@ -27,7 +27,7 @@ export KBUILD_BUILD_HOST=Nian
 export KBUILD_BUILD_USER="AkuFarish"
 
 function build_kernel() {
-    export PATH="/home/akufarish/clang/bin:$PATH"
+    export PATH="/home/akufarish/neutron/bin:$PATH"
     make -j$(nproc --all) O=out ARCH=arm64 nian_defconfig
     make -j$(nproc --all) ARCH=arm64 O=out \
                           CC=clang \
