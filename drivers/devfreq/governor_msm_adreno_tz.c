@@ -407,6 +407,7 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 	int val, level = 0;
 	unsigned int scm_data[4];
 	int context_count = 0;
+	u64 busy_time;
 
 	/* keeps stats.private_data == NULL   */
 	result = devfreq->profile->get_dev_status(devfreq->dev.parent, &stats);
@@ -414,6 +415,50 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 		pr_err(TAG "get_status failed %d\n", result);
 		return result;
 	}
+
+	*freq = stats.current_frequency;
+	
+	priv->bin.total_time += stats.total_time;
+
+	/* Update gpu busy time as per mod_percent */
+	busy_time = stats.busy_time * priv->mod_percent;
+	do_div(busy_time, 100);
+
+	/* busy_time should not go over total_time */
+	stats.busy_time = min_t(u64, busy_time, stats.total_time);
+
+#if 1
+	// scale busy time up based on adrenoboost parameter, only if MIN_BUSY exceeded...
+	if ((unsigned int)(priv->bin.busy_time + stats.busy_time) >= MIN_BUSY) {
+		priv->bin.busy_time += stats.busy_time * (1 + (adrenoboost*3)/2);
+	} else {
+		/* Prevent overflow */
+		if (stats.busy_time >= (1 << 24) || stats.total_time >= (1 << 24)) {
+			stats.busy_time >>= 7;
+			stats.total_time >>= 7;
+		}
+
+		*freq = stats.current_frequency;
+
+		#ifdef CONFIG_ADRENO_IDLER
+			if (adreno_idler(stats, devfreq, freq)) {
+				/* adreno_idler has asked to bail out now */
+				return 0;
+			}
+		#endif
+
+		priv->bin.total_time += stats.total_time;
+
+		/* Update gpu busy time as per mod_percent */
+		busy_time = stats.busy_time * priv->mod_percent;
+		do_div(busy_time, 100);
+
+		/* busy_time should not go over total_time */
+		stats.busy_time = min_t(u64, busy_time, stats.total_time);
+
+		priv->bin.busy_time += stats.busy_time;
+	}
+#else 
 
 	/* Prevent overflow */
 	if (stats.busy_time >= (1 << 24) || stats.total_time >= (1 << 24)) {
@@ -423,15 +468,24 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 
 	*freq = stats.current_frequency;
 
-#ifdef CONFIG_ADRENO_IDLER
-	if (adreno_idler(stats, devfreq, freq)) {
-		/* adreno_idler has asked to bail out now */
-		return 0;
-	}
-#endif
-	priv->bin.total_time += stats.total_time;
-	priv->bin.busy_time += stats.busy_time;
+	#ifdef CONFIG_ADRENO_IDLER
+		if (adreno_idler(stats, devfreq, freq)) {
+			/* adreno_idler has asked to bail out now */
+			return 0;
+		}
+	#endif
 
+	priv->bin.total_time += stats.total_time;
+
+	/* Update gpu busy time as per mod_percent */
+	busy_time = stats.busy_time * priv->mod_percent;
+	do_div(busy_time, 100);
+
+	/* busy_time should not go over total_time */
+	stats.busy_time = min_t(u64, busy_time, stats.total_time);
+
+	priv->bin.busy_time += stats.busy_time;
+#endif
 	if (stats.private_data)
 		context_count =  *((int *)stats.private_data);
 
