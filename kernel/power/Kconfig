@@ -39,7 +39,6 @@ config POWERSUSPEND
 config POWERSUSPEND_DEBUG
 	bool "Powersuspend driver debugging code"
 	depends on POWERSUSPEND
-	default n
 	help
 	  Output debugging info in dmesg [POWERSUSPEND] (Yank555.lu)
 
