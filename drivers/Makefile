@@ -186,4 +186,4 @@ obj-$(CONFIG_TEE)		+= tee/
 obj-$(CONFIG_AINUR_DTS_SW) += dts_eagle/
 # DTS_EAGLE END
 
-obj-$(CONFIG_KSU)	+= kernelsu/
+#obj-$(CONFIG_KSU)	+= kernelsu/
