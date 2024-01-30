@@ -19,6 +19,7 @@
 #include <linux/io.h>
 #include <linux/ftrace.h>
 #include <linux/mm.h>
+// #include "msm_adreno_devfreq.h"
 #include <linux/msm_adreno_devfreq.h>
 #include <asm/cacheflush.h>
 #include <drm/drm_refresh_rate.h>
