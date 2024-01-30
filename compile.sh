@@ -28,7 +28,7 @@ export KBUILD_BUILD_USER="Pragmatic"
 
 function build_kernel() {
     export PATH="/workspace/kernel_realme_sdm710/weebx/bin:$PATH"
-    make -j$(nproc --all) O=out ARCH=arm64 line_defconfig
+    make -j$(nproc --all) O=out ARCH=arm64 nian_defconfig
     make -j$(nproc --all) ARCH=arm64 O=out \
                           CC=clang \
                           CROSS_COMPILE=aarch64-linux-gnu- \
