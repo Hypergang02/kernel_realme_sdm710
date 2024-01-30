@@ -13,6 +13,7 @@
 
 #include <linux/devfreq.h>
 #include <linux/module.h>
+// #include "msm_adreno_devfreq.h"
 #include <linux/msm_adreno_devfreq.h>
 #include <linux/slab.h>
 
