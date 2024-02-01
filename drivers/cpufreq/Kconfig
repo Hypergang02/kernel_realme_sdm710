@@ -180,7 +180,6 @@ config CPU_FREQ_DEFAULT_GOV_PIXUTIL
 
 config CPU_FREQ_DEFAULT_GOV_WALT
 	bool "walt"
-	depends on SMP
 	select CPU_FREQ_GOV_WALT
 	select CPU_FREQ_GOV_PERFORMANCE
 	help
@@ -335,8 +334,8 @@ config CPU_FREQ_GOV_BLU_SCHEDUTIL
 	  If in doubt, say N.
 
 config CPU_FREQ_GOV_WALT
-	bool "'walt' cpufreq policy governor"
-	depends on CPU_FREQ && SMP
+	tristate "'walt' cpufreq policy governor"
+	depends on CPU_FREQ
 	select CPU_FREQ_GOV_ATTR_SET
 	select IRQ_WORK
 	help
