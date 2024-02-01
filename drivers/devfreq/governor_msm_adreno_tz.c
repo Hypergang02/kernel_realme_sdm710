@@ -60,12 +60,11 @@ static DEFINE_SPINLOCK(suspend_lock);
 
 #define TAG "msm_adreno_tz: "
 
+static u64 suspend_time;
+static u64 suspend_start;
 #if 1
 static unsigned int adrenoboost = 0;
 #endif
-
-static u64 suspend_time;
-static u64 suspend_start;
 static unsigned long acc_total, acc_relative_busy;
 
 static struct msm_adreno_extended_profile *partner_gpu_profile;
