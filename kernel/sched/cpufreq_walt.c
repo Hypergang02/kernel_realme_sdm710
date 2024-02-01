@@ -614,7 +614,7 @@ static inline bool waltgov_cpu_is_busy(struct waltgov_cpu *wg_cpu) { return fals
 #endif
 
 #define DEFAULT_TARGET_LOAD_THRESH 1024
-#define DEFAULT_TARGET_LOAD_SHIFT 4
+#define DEFAULT_TARGET_LOAD_SHIFT 8
 #ifdef CONFIG_SCHED_WALT
 static void waltgov_walt_adjust(struct waltgov_cpu *wg_cpu, unsigned long cpu_util,
 				unsigned long nl, unsigned long *util,
