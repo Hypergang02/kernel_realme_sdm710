@@ -27,10 +27,17 @@ export KBUILD_BUILD_HOST=Play
 export KBUILD_BUILD_USER="Pragmatic"
 
 function build_kernel() {
-    export PATH="/workspace/kernel_realme_sdm710/weebx/bin:$PATH"
+    export PATH="/workspace/Test/walt1/weebx/bin:$PATH"
     make -j$(nproc --all) O=out ARCH=arm64 line_defconfig
     make -j$(nproc --all) ARCH=arm64 O=out \
                           CC=clang \
+                          LD=ld.lld \
+                          AR=llvm-ar \
+                          AS=llvm-as \
+                          NM=llvm-nm \
+                          OBJCOPY=llvm-objcopy \
+                          OBJDUMP=llvm-objdump \
+                          STRIP=llvm-strip \
                           CROSS_COMPILE=aarch64-linux-gnu- \
                           CROSS_COMPILE_ARM32=arm-linux-gnueabi-
     if [ -e "$KERN_IMG" ] || [ -e "$KERN_IMG2" ]; then
