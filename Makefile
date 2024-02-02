@@ -762,29 +762,11 @@ else
 KBUILD_CFLAGS   += -O2
 endif
 
-# Tell compiler to tune the performance of the code for a specified
-# target processor
-ifeq ($(cc-name),gcc)
-KBUILD_CFLAGS += -mcpu=cortex-a73.cortex-a53+crc+crypto -mtune=cortex-a73.cortex-a53 -funswitch-loops -funroll-all-loops -fpeel-loops -fsplit-loops -fversion-loops-for-strides -fsection-anchors -ftracer -mno-fix-cortex-a53-835769 -mno-fix-cortex-a53-843419 -freg-struct-return
-KBUILD_AFLAGS += -mcpu=cortex-a73.cortex-a53+crc+crypto -mtune=cortex-a73.cortex-a53 -funswitch-loops -funroll-all-loops -fpeel-loops -fsplit-loops -fversion-loops-for-strides -fsection-anchors -ftracer -mno-fix-cortex-a53-835769 -mno-fix-cortex-a53-843419 -freg-struct-return
-else ifeq ($(cc-name),clang)
-KBUILD_CFLAGS += -march=armv8-a+crc+crypto
-KBUILD_AFLAGS += -march=armv8-a+crc+crypto
-endif
+# Tell compiler to use pipes instead of temporary files during compilation
+KBUILD_CFLAGS += $(call cc-option, -pipe)
 
 ifdef CONFIG_CC_WERROR
 KBUILD_CFLAGS	+= -Werror
-endif
-
-ifdef CONFIG_LLVM_POLLY
-KBUILD_CFLAGS	+= -mllvm -polly \
-		   -mllvm -polly-run-inliner \
-		   -mllvm -polly-opt-fusion=max \
-		   -mllvm -polly-ast-use-context \
-		   -mllvm -polly-detect-keep-going \
-		   -mllvm -polly-vectorizer=stripmine \
-		   -mllvm -polly-invariant-load-hoisting
-endif
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
@@ -1921,13 +1903,3 @@ FORCE:
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
 .PHONY: $(PHONY)
-KBUILD_CFLAGS  += $(call cc-disable-warning, misleading-indentation)
-KBUILD_CFLAGS  += $(call cc-disable-warning, void-pointer-to-int-cast)
-KBUILD_CFLAGS  += $(call cc-disable-warning, string-concatenation)
-KBUILD_CFLAGS  += $(call cc-disable-warning, frame-larger-than)
-KBUILD_CFLAGS  += $(call cc-disable-warning, unused-variable)
-KBUILD_CFLAGS  += $(call cc-disable-warning, unused-function)
-KBUILD_CFLAGS  += $(call cc-disable-warning, pointer-bool-conversion)
-KBUILD_CFLAGS  += $(call cc-disable-warning, enum-conversion)
-KBUILD_CFLAGS  += $(call cc-disable-warning, missing-prototypes)
-KBUILD_CFLAGS  += $(call cc-disable-warning, compare-distinct-pointer-types)
